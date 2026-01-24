@@ -1,0 +1,191 @@
+import { useState } from "react";
+import { Send, Phone, Mail, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+
+const ContactForm = () => {
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Simulate form submission
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    toast({
+      title: "Message Sent!",
+      description: "Thanks for reaching out. I'll get back to you within 24 hours.",
+    });
+
+    setFormData({ name: "", email: "", phone: "", message: "" });
+    setIsSubmitting(false);
+  };
+
+  const contactInfo = [
+    {
+      icon: Phone,
+      label: "Phone",
+      value: "(416) 670-6209",
+      href: "tel:4166706209",
+    },
+    {
+      icon: Mail,
+      label: "Email",
+      value: "jirosh.balaganesan@calibermortgage.ca",
+      href: "mailto:jirosh.balaganesan@calibermortgage.ca",
+    },
+    {
+      icon: MapPin,
+      label: "Office",
+      value: "Unit 8, 175 West Beaver Creek Rd, Richmond Hill, ON",
+      href: "#",
+    },
+  ];
+
+  return (
+    <section id="contact" className="py-20 md:py-28 bg-muted/50">
+      <div className="container">
+        <div className="max-w-3xl mx-auto text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Book a Free Mortgage Call
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Ready to start your home buying journey? Send me a message and I'll 
+            get back to you within 24 hours.
+          </p>
+        </div>
+
+        <div className="max-w-5xl mx-auto">
+          <div className="grid lg:grid-cols-5 gap-8">
+            {/* Contact Info */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="bg-hero-gradient rounded-2xl p-6 md:p-8 text-primary-foreground">
+                <h3 className="text-xl font-bold mb-6">Get in Touch</h3>
+                <div className="space-y-5">
+                  {contactInfo.map((item) => (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      className="flex items-start gap-4 group"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors">
+                        <item.icon className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-primary-foreground/70">{item.label}</p>
+                        <p className="font-medium text-sm">{item.value}</p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Form */}
+            <div className="lg:col-span-3">
+              <form
+                onSubmit={handleSubmit}
+                className="bg-card rounded-2xl shadow-medium border border-border p-6 md:p-8"
+              >
+                <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <Label htmlFor="name" className="text-foreground">
+                      Name *
+                    </Label>
+                    <Input
+                      id="name"
+                      required
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      placeholder="Your name"
+                      className="mt-1.5"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email" className="text-foreground">
+                      Email *
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                      placeholder="you@example.com"
+                      className="mt-1.5"
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <Label htmlFor="phone" className="text-foreground">
+                    Phone
+                  </Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
+                    placeholder="(416) 123-4567"
+                    className="mt-1.5"
+                  />
+                </div>
+
+                <div className="mb-6">
+                  <Label htmlFor="message" className="text-foreground">
+                    How can I help? (optional)
+                  </Label>
+                  <Textarea
+                    id="message"
+                    value={formData.message}
+                    onChange={(e) =>
+                      setFormData({ ...formData, message: e.target.value })
+                    }
+                    placeholder="Tell me about your situation or any questions you have..."
+                    rows={4}
+                    className="mt-1.5"
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    "Sending..."
+                  ) : (
+                    <>
+                      Send Message
+                      <Send className="ml-2 w-4 h-4" />
+                    </>
+                  )}
+                </Button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ContactForm;
