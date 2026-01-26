@@ -86,10 +86,15 @@ const Footer = () => {
                 <Mail className="w-4 h-4 flex-shrink-0" />
                 <span className="break-all">jirosh.balaganesan@calibermortgage.ca</span>
               </a>
-              <div className="flex items-start gap-2 text-primary-foreground/80 min-h-[44px]">
+              <a 
+                href="https://www.google.com/maps/search/?api=1&query=Unit+8,+175+West+Beaver+Creek+Rd,+Richmond+Hill,+ON+L4B+3M1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-2 text-primary-foreground/80 hover:text-primary-foreground transition-colors min-h-[44px]"
+              >
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 <span className="text-xs sm:text-sm">Unit 8, 175 West Beaver Creek Rd<br />Richmond Hill, ON L4B 3M1</span>
-              </div>
+              </a>
             </div>
           </div>
 

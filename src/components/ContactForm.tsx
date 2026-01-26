@@ -48,8 +48,8 @@ const ContactForm = () => {
     {
       icon: MapPin,
       label: "Office",
-      value: "Unit 8, 175 West Beaver Creek Rd, Richmond Hill, ON",
-      href: "#",
+      value: "Unit 8, 175 West Beaver Creek Rd, Richmond Hill, ON L4B 3M1",
+      href: "https://www.google.com/maps/search/?api=1&query=Unit+8,+175+West+Beaver+Creek+Rd,+Richmond+Hill,+ON+L4B+3M1",
     },
   ];
 
@@ -70,21 +70,32 @@ const ContactForm = () => {
           <div className="flex flex-col lg:grid lg:grid-cols-5 gap-6 sm:gap-8">
             {/* Contact Info */}
             <div className="lg:col-span-2 space-y-6 order-2 lg:order-1">
-              <div className="bg-hero-gradient rounded-2xl p-5 sm:p-6 md:p-8 text-primary-foreground">
+              <div className="bg-hero-gradient rounded-2xl p-5 sm:p-6 md:p-8 text-primary-foreground overflow-hidden">
                 <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">Get in Touch</h3>
                 <div className="space-y-4 sm:space-y-5">
                   {contactInfo.map((item) => (
                     <a
                       key={item.label}
                       href={item.href}
-                      className="flex items-start gap-3 sm:gap-4 group min-h-[44px]"
+                      target={item.label === "Office" ? "_blank" : undefined}
+                      rel={item.label === "Office" ? "noopener noreferrer" : undefined}
+                      className={`flex items-start group min-h-[44px] ${item.label === "Email" ? "gap-2 sm:gap-3" : "gap-3 sm:gap-4"}`}
                     >
                       <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors">
                         <item.icon className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs sm:text-sm text-primary-foreground/70 mb-0.5">{item.label}</p>
-                        <p className="font-medium text-xs sm:text-sm break-words">{item.value}</p>
+                        <p 
+                          className={`font-medium ${item.label === "Email" ? "text-[10px] sm:text-xs leading-tight" : "text-xs sm:text-sm"} ${item.label === "Email" ? "" : "break-words"}`}
+                          style={item.label === "Email" ? { 
+                            wordBreak: "break-word",
+                            overflowWrap: "break-word",
+                            lineHeight: "1.3"
+                          } : {}}
+                        >
+                          {item.value}
+                        </p>
                       </div>
                     </a>
                   ))}
