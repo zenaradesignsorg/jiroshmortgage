@@ -1,3 +1,5 @@
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+
 // Feature Icons - Custom professional SVG icons
 const LicensedIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +55,15 @@ const GoogleIcon = ({ className }: { className?: string }) => (
 );
 
 const About = () => {
-  const features = [
+  const headingAnim = useScrollAnimation({ type: "fade-up", delay: 0 });
+  const textAnim = useScrollAnimation({ type: "fade-up", delay: 100 });
+  const socialAnim = useScrollAnimation({ type: "fade-in", delay: 200 });
+
+  const features: Array<{
+    icon: React.ComponentType<{ className?: string }>;
+    title: string;
+    description: string;
+  }> = [
     {
       icon: LicensedIcon,
       title: "Licensed Agent",
@@ -80,16 +90,16 @@ const About = () => {
     <section id="about" className="py-20 md:py-28">
       <div className="container">
         <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12 md:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4">
+          <h2 ref={headingAnim.ref} className={`text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4 ${headingAnim.className}`} style={headingAnim.style}>
             About Me
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground mb-4 sm:mb-6 px-4 sm:px-0">
+          <p ref={textAnim.ref} className={`text-base sm:text-lg text-muted-foreground mb-4 sm:mb-6 px-4 sm:px-0 ${textAnim.className}`} style={textAnim.style}>
             I'm a licensed mortgage agent in Ontario dedicated to making your home buying journey 
             as smooth as possible. Whether you're a first-time buyer or looking to refinance, 
             I provide personalized guidance every step of the way.
           </p>
           {/* Social Media Links */}
-          <div className="flex items-center justify-center gap-3 sm:gap-4">
+          <div ref={socialAnim.ref} className={`flex items-center justify-center gap-3 sm:gap-4 ${socialAnim.className}`} style={socialAnim.style}>
             <a 
               href="https://www.instagram.com/jb.loans?igsh=MXd2d3AwNjNwYWFjNQ%3D%3D" 
               target="_blank" 
@@ -121,31 +131,50 @@ const About = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {features.map((feature, index) => (
-            <div
-              key={feature.title}
-              className="group relative bg-card rounded-xl p-5 sm:p-6 shadow-soft hover:shadow-medium transition-all duration-300 border border-border hover:border-primary/30 overflow-hidden"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              {/* Subtle gradient overlay on hover */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:to-transparent transition-all duration-300 rounded-xl pointer-events-none" />
-              
-              {/* Content */}
-              <div className="relative z-10">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center mb-4 group-hover:from-primary/20 group-hover:to-primary/10 transition-all duration-300 shadow-sm group-hover:shadow-md">
-                  <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" strokeWidth="2" />
-                </div>
-                <h3 className="font-semibold text-foreground mb-2 text-base sm:text-lg group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
-                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{feature.description}</p>
-              </div>
-              
-              {/* Decorative corner accent */}
-              <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 -translate-y-1/2 translate-x-1/2" />
-            </div>
-          ))}
+          {features.map((feature, index) => {
+            // Create animation hook outside of map
+            return <FeatureCard key={feature.title} feature={feature} index={index} />;
+          })}
         </div>
       </div>
     </section>
+  );
+};
+
+const FeatureCard = ({ 
+  feature, 
+  index 
+}: { 
+  feature: {
+    icon: React.ComponentType<{ className?: string }>;
+    title: string;
+    description: string;
+  }; 
+  index: number;
+}) => {
+  const cardAnim = useScrollAnimation({ type: "fade-up", delay: index * 150 });
+  
+  return (
+    <div
+      ref={cardAnim.ref}
+      className={`group relative bg-card rounded-xl p-5 sm:p-6 shadow-soft hover:shadow-medium transition-all duration-300 border border-border hover:border-primary/30 overflow-hidden ${cardAnim.className}`}
+      style={cardAnim.style}
+    >
+      {/* Subtle gradient overlay on hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:to-transparent transition-all duration-300 rounded-xl pointer-events-none" />
+      
+      {/* Content */}
+      <div className="relative z-10">
+        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center mb-4 group-hover:from-primary/20 group-hover:to-primary/10 transition-all duration-300 shadow-sm group-hover:shadow-md">
+          <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" strokeWidth="2" />
+        </div>
+        <h3 className="font-semibold text-foreground mb-2 text-base sm:text-lg group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
+        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{feature.description}</p>
+      </div>
+      
+      {/* Decorative corner accent */}
+      <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 -translate-y-1/2 translate-x-1/2" />
+    </div>
   );
 };
 

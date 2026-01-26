@@ -5,8 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const ContactForm = () => {
+  const headingAnim = useScrollAnimation({ type: "fade-up", delay: 0 });
+  const textAnim = useScrollAnimation({ type: "fade-up", delay: 100 });
+  const contactInfoAnim = useScrollAnimation({ type: "fade-left", delay: 200 });
+  const formAnim = useScrollAnimation({ type: "fade-right", delay: 200 });
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -57,10 +62,10 @@ const ContactForm = () => {
     <section id="contact" className="py-16 sm:py-20 md:py-28 bg-muted/50">
       <div className="container">
         <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4">
+          <h2 ref={headingAnim.ref} className={`text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4 ${headingAnim.className}`} style={headingAnim.style}>
             Book a Free Mortgage Call
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground px-4 sm:px-0">
+          <p ref={textAnim.ref} className={`text-base sm:text-lg text-muted-foreground px-4 sm:px-0 ${textAnim.className}`} style={textAnim.style}>
             Ready to start your home buying journey? Send me a message and I'll 
             get back to you within 24 hours.
           </p>
@@ -69,7 +74,7 @@ const ContactForm = () => {
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col lg:grid lg:grid-cols-5 gap-6 sm:gap-8">
             {/* Contact Info */}
-            <div className="lg:col-span-2 space-y-6 order-2 lg:order-1">
+            <div ref={contactInfoAnim.ref} className={`lg:col-span-2 space-y-6 order-2 lg:order-1 ${contactInfoAnim.className}`} style={contactInfoAnim.style}>
               <div className="bg-hero-gradient rounded-2xl p-5 sm:p-6 md:p-8 text-primary-foreground overflow-hidden">
                 <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">Get in Touch</h3>
                 <div className="space-y-4 sm:space-y-5">
@@ -104,7 +109,7 @@ const ContactForm = () => {
             </div>
 
             {/* Form */}
-            <div className="lg:col-span-3 order-1 lg:order-2">
+            <div ref={formAnim.ref} className={`lg:col-span-3 order-1 lg:order-2 ${formAnim.className}`} style={formAnim.style}>
               <form
                 onSubmit={handleSubmit}
                 className="bg-card rounded-2xl shadow-medium border border-border p-4 sm:p-6 md:p-8"

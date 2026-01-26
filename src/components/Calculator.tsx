@@ -3,8 +3,13 @@ import { Calculator as CalcIcon, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 const Calculator = () => {
+  const headingAnim = useScrollAnimation({ type: "fade-up", delay: 0 });
+  const badgeAnim = useScrollAnimation({ type: "fade-up", delay: 100 });
+  const textAnim = useScrollAnimation({ type: "fade-up", delay: 200 });
+  const cardAnim = useScrollAnimation({ type: "fade-up", delay: 300 });
   const [homePrice, setHomePrice] = useState(500000);
   const [downPayment, setDownPayment] = useState(100000);
   const [interestRate, setInterestRate] = useState(5.5);
@@ -42,21 +47,21 @@ const Calculator = () => {
     <section id="calculator" className="py-16 sm:py-20 md:py-28">
       <div className="container">
         <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-primary/10 text-primary text-xs sm:text-sm font-medium mb-3 sm:mb-4">
+          <div ref={badgeAnim.ref} className={`inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-primary/10 text-primary text-xs sm:text-sm font-medium mb-3 sm:mb-4 ${badgeAnim.className}`} style={badgeAnim.style}>
             <CalcIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             Estimate Tool
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4">
+          <h2 ref={headingAnim.ref} className={`text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4 ${headingAnim.className}`} style={headingAnim.style}>
             Mortgage Calculator
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground px-4 sm:px-0">
+          <p ref={textAnim.ref} className={`text-base sm:text-lg text-muted-foreground px-4 sm:px-0 ${textAnim.className}`} style={textAnim.style}>
             Get a quick estimate of your monthly payments. For a detailed assessment 
             and actual rates, book a free call.
           </p>
         </div>
 
         <div className="max-w-4xl mx-auto">
-          <div className="bg-card rounded-2xl shadow-medium border border-border p-4 sm:p-6 md:p-8">
+          <div ref={cardAnim.ref} className={`bg-card rounded-2xl shadow-medium border border-border p-4 sm:p-6 md:p-8 ${cardAnim.className}`} style={cardAnim.style}>
             <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 sm:gap-8">
               {/* Inputs */}
               <div className="space-y-5 sm:space-y-6">

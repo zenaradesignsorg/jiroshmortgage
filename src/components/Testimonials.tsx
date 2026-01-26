@@ -1,4 +1,9 @@
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+
 const Testimonials = () => {
+  const headingAnim = useScrollAnimation({ type: "fade-up", delay: 0 });
+  const textAnim = useScrollAnimation({ type: "fade-up", delay: 100 });
+
   const testimonials = [
     {
       name: "Sarah Chen",
@@ -24,19 +29,23 @@ const Testimonials = () => {
     <section id="testimonials" className="py-16 sm:py-20 md:py-28">
       <div className="container">
         <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4">
+          <h2 ref={headingAnim.ref} className={`text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4 ${headingAnim.className}`} style={headingAnim.style}>
             What Clients Say
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground px-4 sm:px-0">
+          <p ref={textAnim.ref} className={`text-base sm:text-lg text-muted-foreground px-4 sm:px-0 ${textAnim.className}`} style={textAnim.style}>
             Don't just take our word for it. Here's what clients have to say about their experience.
           </p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map((testimonial, index) => {
+            const cardAnim = useScrollAnimation({ type: "fade-up", delay: index * 150 });
+            return (
             <div
               key={index}
-              className="bg-card rounded-xl p-5 sm:p-6 shadow-soft border border-border hover:shadow-medium transition-all duration-300 hover:border-primary/20"
+              ref={cardAnim.ref}
+              className={`bg-card rounded-xl p-5 sm:p-6 shadow-soft border border-border hover:shadow-medium transition-all duration-300 hover:border-primary/20 ${cardAnim.className}`}
+              style={cardAnim.style}
             >
               {/* Rating */}
               <div className="flex items-center gap-1 mb-3 sm:mb-4">
@@ -63,7 +72,8 @@ const Testimonials = () => {
                 <p className="text-xs sm:text-sm text-muted-foreground">{testimonial.location}</p>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

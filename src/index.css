@@ -135,4 +135,38 @@
   .shadow-glow {
     box-shadow: var(--shadow-glow);
   }
+
+  /* Scroll animation utilities - GPU accelerated */
+  .scroll-animate-hidden {
+    opacity: 0;
+    transform: translateY(1rem);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .scroll-animate-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .scroll-animate-hidden-left {
+    opacity: 0;
+    transform: translateX(-2rem);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .scroll-animate-visible-left {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .scroll-animate-hidden-right {
+    opacity: 0;
+    transform: translateX(2rem);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .scroll-animate-visible-right {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

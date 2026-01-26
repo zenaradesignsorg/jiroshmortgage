@@ -1,4 +1,5 @@
 import { Phone, Mail, MapPin } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 // Social Media Icons
 const InstagramIcon = ({ className }: { className?: string }) => (
@@ -23,10 +24,13 @@ const GoogleIcon = ({ className }: { className?: string }) => (
 );
 
 const Footer = () => {
+  const contentAnim = useScrollAnimation({ type: "fade-up", delay: 0 });
+  const bottomAnim = useScrollAnimation({ type: "fade-up", delay: 100 });
+
   return (
     <footer className="bg-primary text-primary-foreground py-8 sm:py-12">
       <div className="container">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
+        <div ref={contentAnim.ref} className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8 ${contentAnim.className}`} style={contentAnim.style}>
           {/* Brand */}
           <div className="sm:col-span-2 md:col-span-1">
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
@@ -110,7 +114,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/20 pt-6 sm:pt-8">
+        <div ref={bottomAnim.ref} className={`border-t border-primary-foreground/20 pt-6 sm:pt-8 ${bottomAnim.className}`} style={bottomAnim.style}>
           <div className="flex flex-col md:flex-row md:justify-between items-center md:items-start gap-3 sm:gap-4 text-xs sm:text-sm text-primary-foreground/70 text-center md:text-left">
             <div className="space-y-1">
               <p>Jirosh Balaganesan | Mortgage Agent Level 1</p>
