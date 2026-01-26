@@ -16,22 +16,22 @@ const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-b border-border">
       <div className="container flex items-center justify-between h-16 md:h-20">
         <a href="#" className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
             <span className="text-primary-foreground font-bold text-lg">C</span>
           </div>
-          <div className="hidden sm:block">
-            <p className="font-bold text-primary text-sm leading-tight">CALIBER</p>
-            <p className="text-[10px] text-muted-foreground tracking-wider">MORTGAGE INC</p>
+          <div className="block">
+            <p className="font-bold text-primary text-sm leading-tight whitespace-nowrap">CALIBER</p>
+            <p className="text-[10px] text-muted-foreground tracking-wider whitespace-nowrap">MORTGAGE INC</p>
           </div>
         </a>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden xl:flex items-center gap-6 xl:gap-8">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+              className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors whitespace-nowrap"
             >
               {link.label}
             </a>
@@ -55,7 +55,7 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2.5 text-foreground hover:text-primary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="xl:hidden p-2.5 text-foreground hover:text-primary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
           >
@@ -69,12 +69,12 @@ const Header = () => {
         <>
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 xl:hidden"
             onClick={() => setIsMenuOpen(false)}
             aria-hidden="true"
           />
           {/* Menu */}
-          <nav className="md:hidden bg-card border-t border-border z-50 relative animate-fade-in">
+          <nav className="xl:hidden bg-card border-t border-border z-50 relative animate-fade-in">
             <div className="container py-4 flex flex-col gap-2">
               {navLinks.map((link) => (
                 <a

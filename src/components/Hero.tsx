@@ -12,7 +12,7 @@ const Hero = () => {
       <div className="container relative">
         <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center py-8 sm:py-12 md:py-20 lg:py-28">
           {/* Content */}
-          <div className="text-primary-foreground order-2 lg:order-1">
+          <div className="text-primary-foreground order-2 lg:order-1 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 backdrop-blur-sm text-xs sm:text-sm mb-4 sm:mb-6 animate-fade-in">
               <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               <span className="whitespace-nowrap">Serving Scarborough, Markham & the GTA</span>
@@ -23,12 +23,12 @@ const Hero = () => {
               <span className="block text-accent">Ontario Buyers</span>
             </h1>
             
-            <p className="text-base sm:text-lg md:text-xl text-primary-foreground/85 mb-6 sm:mb-8 max-w-lg animate-fade-in" style={{ animationDelay: "0.2s" }}>
+            <p className="text-base sm:text-lg md:text-xl text-primary-foreground/85 mb-6 sm:mb-8 max-w-lg mx-auto lg:mx-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
               Clear, honest, and reliable guidance from pre-approval to closing. 
               Available evenings and weekends when you need me.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start animate-fade-in" style={{ animationDelay: "0.3s" }}>
               <Button 
                 size="lg" 
                 className="bg-white text-primary hover:bg-white/90 font-semibold w-full sm:w-auto"
