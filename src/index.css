@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @layer base {
   :root {
@@ -74,11 +74,43 @@
 
   html {
     scroll-behavior: smooth;
+    /* iOS safe area insets */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', system-ui, sans-serif;
+    /* Ensure minimum font size for readability on mobile */
+    font-size: 16px;
+    /* Prevent text size adjustment on iOS */
+    -webkit-text-size-adjust: 100%;
+    /* Improve touch scrolling */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Better touch targets for mobile - ensure inputs and form elements are touch-friendly */
+  input, select, textarea {
+    min-height: 44px;
+  }
+  
+  /* Improve tap highlight on mobile */
+  a, button {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Ensure buttons and links have adequate touch targets when not explicitly sized */
+  @media (max-width: 768px) {
+    button:not([class*="w-"]):not([class*="h-"]):not([class*="min-"]),
+    a:not([class*="w-"]):not([class*="h-"]):not([class*="min-"]) {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  /* Improve tap highlight on mobile */
+  a, button {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
   }
 }
 

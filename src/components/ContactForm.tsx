@@ -54,37 +54,37 @@ const ContactForm = () => {
   ];
 
   return (
-    <section id="contact" className="py-20 md:py-28 bg-muted/50">
+    <section id="contact" className="py-16 sm:py-20 md:py-28 bg-muted/50">
       <div className="container">
-        <div className="max-w-3xl mx-auto text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+        <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4">
             Book a Free Mortgage Call
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-base sm:text-lg text-muted-foreground px-4 sm:px-0">
             Ready to start your home buying journey? Send me a message and I'll 
             get back to you within 24 hours.
           </p>
         </div>
 
         <div className="max-w-5xl mx-auto">
-          <div className="grid lg:grid-cols-5 gap-8">
+          <div className="flex flex-col lg:grid lg:grid-cols-5 gap-6 sm:gap-8">
             {/* Contact Info */}
-            <div className="lg:col-span-2 space-y-6">
-              <div className="bg-hero-gradient rounded-2xl p-6 md:p-8 text-primary-foreground">
-                <h3 className="text-xl font-bold mb-6">Get in Touch</h3>
-                <div className="space-y-5">
+            <div className="lg:col-span-2 space-y-6 order-2 lg:order-1">
+              <div className="bg-hero-gradient rounded-2xl p-5 sm:p-6 md:p-8 text-primary-foreground">
+                <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">Get in Touch</h3>
+                <div className="space-y-4 sm:space-y-5">
                   {contactInfo.map((item) => (
                     <a
                       key={item.label}
                       href={item.href}
-                      className="flex items-start gap-4 group"
+                      className="flex items-start gap-3 sm:gap-4 group min-h-[44px]"
                     >
-                      <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors">
+                      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 group-hover:bg-white/20 transition-colors">
                         <item.icon className="w-5 h-5" />
                       </div>
-                      <div>
-                        <p className="text-sm text-primary-foreground/70">{item.label}</p>
-                        <p className="font-medium text-sm">{item.value}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs sm:text-sm text-primary-foreground/70 mb-0.5">{item.label}</p>
+                        <p className="font-medium text-xs sm:text-sm break-words">{item.value}</p>
                       </div>
                     </a>
                   ))}
@@ -93,14 +93,14 @@ const ContactForm = () => {
             </div>
 
             {/* Form */}
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-3 order-1 lg:order-2">
               <form
                 onSubmit={handleSubmit}
-                className="bg-card rounded-2xl shadow-medium border border-border p-6 md:p-8"
+                className="bg-card rounded-2xl shadow-medium border border-border p-4 sm:p-6 md:p-8"
               >
-                <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <Label htmlFor="name" className="text-foreground">
+                    <Label htmlFor="name" className="text-foreground text-sm sm:text-base">
                       Name *
                     </Label>
                     <Input
@@ -111,11 +111,11 @@ const ContactForm = () => {
                         setFormData({ ...formData, name: e.target.value })
                       }
                       placeholder="Your name"
-                      className="mt-1.5"
+                      className="mt-1.5 h-12 sm:h-11"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="email" className="text-foreground">
+                    <Label htmlFor="email" className="text-foreground text-sm sm:text-base">
                       Email *
                     </Label>
                     <Input
@@ -127,13 +127,13 @@ const ContactForm = () => {
                         setFormData({ ...formData, email: e.target.value })
                       }
                       placeholder="you@example.com"
-                      className="mt-1.5"
+                      className="mt-1.5 h-12 sm:h-11"
                     />
                   </div>
                 </div>
 
                 <div className="mb-4">
-                  <Label htmlFor="phone" className="text-foreground">
+                  <Label htmlFor="phone" className="text-foreground text-sm sm:text-base">
                     Phone
                   </Label>
                   <Input
@@ -144,12 +144,12 @@ const ContactForm = () => {
                       setFormData({ ...formData, phone: e.target.value })
                     }
                     placeholder="(416) 123-4567"
-                    className="mt-1.5"
+                    className="mt-1.5 h-12 sm:h-11"
                   />
                 </div>
 
-                <div className="mb-6">
-                  <Label htmlFor="message" className="text-foreground">
+                <div className="mb-5 sm:mb-6">
+                  <Label htmlFor="message" className="text-foreground text-sm sm:text-base">
                     How can I help? (optional)
                   </Label>
                   <Textarea
@@ -160,7 +160,7 @@ const ContactForm = () => {
                     }
                     placeholder="Tell me about your situation or any questions you have..."
                     rows={4}
-                    className="mt-1.5"
+                    className="mt-1.5 min-h-[120px]"
                   />
                 </div>
 
