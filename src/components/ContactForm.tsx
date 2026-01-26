@@ -21,20 +21,61 @@ const ContactForm = () => {
     message: "",
   });
 
+  const validateForm = () => {
+    const errors: string[] = [];
+    
+    if (!formData.name.trim()) {
+      errors.push("Name is required");
+    }
+    
+    if (!formData.email.trim()) {
+      errors.push("Email is required");
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.push("Please enter a valid email address");
+    }
+    
+    if (!formData.phone.trim()) {
+      errors.push("Phone is required");
+    } else if (!/^[\d\s()+-]+$/.test(formData.phone)) {
+      errors.push("Please enter a valid phone number");
+    }
+    
+    return errors;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const errors = validateForm();
+    if (errors.length > 0) {
+      toast({
+        title: "Validation Error",
+        description: errors.join(", "),
+      });
+      return;
+    }
+    
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Simulate form submission
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    toast({
-      title: "Message Sent!",
-      description: "Thanks for reaching out. I'll get back to you within 24 hours.",
-    });
+      toast({
+        title: "Message Sent!",
+        description: "Thanks for reaching out. I'll get back to you within 24 hours.",
+      });
 
-    setFormData({ name: "", email: "", phone: "", message: "" });
-    setIsSubmitting(false);
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [

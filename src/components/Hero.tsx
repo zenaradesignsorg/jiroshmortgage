@@ -70,6 +70,7 @@ const Hero = () => {
                   loading="eager"
                   width={384}
                   height={384}
+                  fetchPriority="high"
                 />
               </div>
               <div ref={cardAnim.ref} className={`absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 bg-card rounded-xl p-3 sm:p-4 shadow-medium ${cardAnim.className}`} style={cardAnim.style}>

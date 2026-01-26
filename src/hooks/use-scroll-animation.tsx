@@ -25,18 +25,28 @@ export const useScrollAnimation = ({
     const element = elementRef.current;
     if (!element) return;
 
+    // Use requestAnimationFrame for better performance
+    let rafId: number | null = null;
+    
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            if (triggerOnce) {
-              setHasAnimated(true);
+        // Cancel any pending animation frame
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
+        
+        rafId = requestAnimationFrame(() => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setIsVisible(true);
+              if (triggerOnce) {
+                setHasAnimated(true);
+              }
+            } else if (!triggerOnce) {
+              setIsVisible(false);
+              setHasAnimated(false);
             }
-          } else if (!triggerOnce) {
-            setIsVisible(false);
-            setHasAnimated(false);
-          }
+          });
         });
       },
       {
@@ -48,6 +58,9 @@ export const useScrollAnimation = ({
     observer.observe(element);
 
     return () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
       observer.disconnect();
     };
   }, [threshold, rootMargin, triggerOnce]);

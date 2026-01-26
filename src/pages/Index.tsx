@@ -1,11 +1,20 @@
+import { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Services from "@/components/Services";
-import Testimonials from "@/components/Testimonials";
-import Calculator from "@/components/Calculator";
-import ContactForm from "@/components/ContactForm";
-import Footer from "@/components/Footer";
+
+// Lazy load below-the-fold components for better initial load performance
+const About = lazy(() => import("@/components/About"));
+const Services = lazy(() => import("@/components/Services"));
+const Testimonials = lazy(() => import("@/components/Testimonials"));
+const Calculator = lazy(() => import("@/components/Calculator"));
+const ContactForm = lazy(() => import("@/components/ContactForm"));
+const Footer = lazy(() => import("@/components/Footer"));
+
+const LoadingFallback = () => (
+  <div className="min-h-[200px] flex items-center justify-center">
+    <div className="animate-pulse text-muted-foreground">Loading...</div>
+  </div>
+);
 
 const Index = () => {
   return (
@@ -13,13 +22,25 @@ const Index = () => {
       <Header />
       <main>
         <Hero />
-        <About />
-        <Services />
-        <Testimonials />
-        <Calculator />
-        <ContactForm />
+        <Suspense fallback={<LoadingFallback />}>
+          <About />
+        </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <Services />
+        </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <Testimonials />
+        </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <Calculator />
+        </Suspense>
+        <Suspense fallback={<LoadingFallback />}>
+          <ContactForm />
+        </Suspense>
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
       </main>
-      <Footer />
     </div>
   );
 };
