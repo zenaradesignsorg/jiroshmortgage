@@ -106,12 +106,12 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-primary-foreground/20 pt-6 sm:pt-8">
-          <div className="flex flex-col items-center gap-3 sm:gap-4 text-xs sm:text-sm text-primary-foreground/70 text-center">
+          <div className="flex flex-col md:flex-row md:justify-between items-center md:items-start gap-3 sm:gap-4 text-xs sm:text-sm text-primary-foreground/70 text-center md:text-left">
             <div className="space-y-1">
               <p>Jirosh Balaganesan | Mortgage Agent Level 1</p>
               <p>Licence #M25000070</p>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 md:text-right">
               <p>Caliber Mortgage Inc, Brokerage</p>
               <p>Independently Owned & Operated under FSRA#13368</p>
             </div>
