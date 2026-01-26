@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Send, Phone, Mail, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { sendEmailWithRetry } from "@/lib/resend";
+import { trackFormSubmission } from "@/lib/analytics";
 
 const ContactForm = () => {
   const headingAnim = useScrollAnimation({ type: "fade-up", delay: 0 });
@@ -14,6 +16,7 @@ const ContactForm = () => {
   const formAnim = useScrollAnimation({ type: "fade-right", delay: 200 });
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const submitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -43,8 +46,13 @@ const ContactForm = () => {
     return errors;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Clear any pending timeout
+    if (submitTimeoutRef.current) {
+      clearTimeout(submitTimeoutRef.current);
+    }
     
     const errors = validateForm();
     if (errors.length > 0) {
@@ -58,25 +66,37 @@ const ContactForm = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulate form submission
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Track form submission in analytics
+      trackFormSubmission('contact_form');
 
-      toast({
-        title: "Message Sent!",
-        description: "Thanks for reaching out. I'll get back to you within 24 hours.",
+      // Send email via Resend
+      const result = await sendEmailWithRetry({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
       });
 
-      setFormData({ name: "", email: "", phone: "", message: "" });
+      if (result.success) {
+        toast({
+          title: "Message Sent!",
+          description: "Thanks for reaching out. I'll get back to you within 24 hours.",
+        });
+
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      } else {
+        throw new Error(result.error || 'Failed to send message');
+      }
     } catch (error) {
+      console.error('Form submission error:', error);
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again later.",
-        variant: "destructive",
+        description: error instanceof Error ? error.message : "Something went wrong. Please try again later.",
       });
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [formData, toast]);
 
   const contactInfo = [
     {

@@ -16,6 +16,11 @@
 
     <meta name="twitter:card" content="summary_large_image" />
 
+    <!-- Google Search Console Verification -->
+    <!-- Replace with your actual verification code from Google Search Console -->
+    <!-- This will be populated from VITE_GOOGLE_SITE_VERIFICATION env var in production -->
+    <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" /> -->
+
     <!-- Security Headers -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta http-equiv="X-Frame-Options" content="DENY" />
@@ -25,7 +30,7 @@
     
     <!-- Content Security Policy (relaxed for Vite dev server) -->
     <!-- Note: For production, configure CSP via server headers for better security -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self';" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https: https://www.google-analytics.com https://www.googletagmanager.com https://api.resend.com; frame-ancestors 'none'; base-uri 'self';" />
   </head>
 
   <body>
