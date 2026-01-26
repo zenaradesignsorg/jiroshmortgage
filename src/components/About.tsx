@@ -1,4 +1,34 @@
-import { Award, Clock, MapPin, Shield } from "lucide-react";
+// Feature Icons - Custom professional SVG icons
+const LicensedIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="4" y="6" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="2" fill="none"/>
+    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" strokeWidth="2" fill="none"/>
+    <path d="M12 11v4M10 13h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+  </svg>
+);
+
+const LocalIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="currentColor" strokeWidth="2" fill="none"/>
+    <circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="2" fill="none"/>
+  </svg>
+);
+
+const FlexibleIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" fill="none"/>
+    <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+  </svg>
+);
+
+const ProcessIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 12h16M4 6h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    <circle cx="2" cy="6" r="1.5" fill="currentColor"/>
+    <circle cx="2" cy="12" r="1.5" fill="currentColor"/>
+    <circle cx="2" cy="18" r="1.5" fill="currentColor"/>
+  </svg>
+);
 
 // Social Media Icons
 const InstagramIcon = ({ className }: { className?: string }) => (
@@ -25,22 +55,22 @@ const GoogleIcon = ({ className }: { className?: string }) => (
 const About = () => {
   const features = [
     {
-      icon: Award,
+      icon: LicensedIcon,
       title: "Licensed Agent",
       description: "Mortgage Agent Level 1, Licence #M25000070",
     },
     {
-      icon: MapPin,
+      icon: LocalIcon,
       title: "Local Expertise",
       description: "Serving Scarborough, Markham, and the GTA",
     },
     {
-      icon: Clock,
+      icon: FlexibleIcon,
       title: "Flexible Hours",
       description: "Available evenings and weekends",
     },
     {
-      icon: Shield,
+      icon: ProcessIcon,
       title: "Clear Process",
       description: "Focus on proper pre-approvals and smooth closings",
     },
@@ -94,14 +124,23 @@ const About = () => {
           {features.map((feature, index) => (
             <div
               key={feature.title}
-              className="group bg-card rounded-xl p-4 sm:p-6 shadow-soft hover:shadow-medium transition-all duration-300 border border-border hover:border-primary/20"
+              className="group relative bg-card rounded-xl p-5 sm:p-6 shadow-soft hover:shadow-medium transition-all duration-300 border border-border hover:border-primary/30 overflow-hidden"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-3 sm:mb-4 group-hover:bg-primary/20 transition-colors">
-                <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+              {/* Subtle gradient overlay on hover */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:to-transparent transition-all duration-300 rounded-xl pointer-events-none" />
+              
+              {/* Content */}
+              <div className="relative z-10">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center mb-4 group-hover:from-primary/20 group-hover:to-primary/10 transition-all duration-300 shadow-sm group-hover:shadow-md">
+                  <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" strokeWidth="2" />
+                </div>
+                <h3 className="font-semibold text-foreground mb-2 text-base sm:text-lg group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{feature.description}</p>
               </div>
-              <h3 className="font-semibold text-foreground mb-1.5 sm:mb-2 text-sm sm:text-base">{feature.title}</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">{feature.description}</p>
+              
+              {/* Decorative corner accent */}
+              <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 -translate-y-1/2 translate-x-1/2" />
             </div>
           ))}
         </div>
