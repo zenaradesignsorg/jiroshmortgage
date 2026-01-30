@@ -1,6 +1,7 @@
 import { Phone, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import caliberLogo from "@/assets/transparent-caliber-mortgage-logo.png";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,13 +26,13 @@ const Header = () => {
       <header className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-b border-border">
         <div className="container flex items-center justify-between h-16 md:h-20">
         <a href="#" className="flex items-center gap-2" aria-label="Caliber Mortgage Inc - Home">
-          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-            <span className="text-primary-foreground font-bold text-lg">C</span>
-          </div>
-          <div className="block">
-            <p className="font-bold text-primary text-sm leading-tight whitespace-nowrap">CALIBER</p>
-            <p className="text-[10px] text-muted-foreground tracking-wider whitespace-nowrap">MORTGAGE INC</p>
-          </div>
+          <img 
+            src={caliberLogo} 
+            alt="Caliber Mortgage Inc" 
+            className="h-8 sm:h-10 md:h-12 w-auto"
+            loading="eager"
+            fetchPriority="high"
+          />
         </a>
 
         {/* Desktop Navigation */}

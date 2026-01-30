@@ -1,5 +1,6 @@
 import { Phone, Mail, MapPin } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import caliberLogoC from "@/assets/transparent-caliber-mortgage-logo-c.png";
 
 // Social Media Icons
 const InstagramIcon = ({ className }: { className?: string }) => (
@@ -31,17 +32,20 @@ const Footer = () => {
     <footer className="bg-primary text-primary-foreground py-8 sm:py-12">
       <div className="container">
         <div ref={contentAnim.ref} className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8 ${contentAnim.className}`} style={contentAnim.style}>
-          {/* Brand */}
-          <div className="sm:col-span-2 md:col-span-1">
-            <div className="flex items-center gap-3 mb-3 sm:mb-4">
-              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-                <span className="font-bold text-lg">C</span>
-              </div>
-              <div>
-                <p className="font-bold text-sm">CALIBER</p>
-                <p className="text-xs text-primary-foreground/70">MORTGAGE INC</p>
-              </div>
-            </div>
+                  {/* Brand */}
+                  <div className="sm:col-span-2 md:col-span-1">
+                    <div className="flex items-center gap-3 mb-3 sm:mb-4">
+                      <img 
+                        src={caliberLogoC} 
+                        alt="Caliber Mortgage Inc" 
+                        className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0"
+                        loading="lazy"
+                      />
+                      <div>
+                        <p className="font-bold text-sm">CALIBER</p>
+                        <p className="text-xs text-primary-foreground/70">MORTGAGE INC</p>
+                      </div>
+                    </div>
             <p className="text-xs sm:text-sm text-primary-foreground/80 max-w-xs mb-3 sm:mb-4">
               More than just a mortgage. Helping Ontario buyers navigate their 
               home buying journey with clarity and confidence.
