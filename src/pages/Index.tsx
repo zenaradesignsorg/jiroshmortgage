@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import StructuredData from "@/components/StructuredData";
 
 // Lazy load below-the-fold components for better initial load performance
 const About = lazy(() => import("@/components/About"));
@@ -19,8 +20,9 @@ const LoadingFallback = () => (
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <StructuredData />
       <Header />
-      <main>
+      <main id="main-content">
         <Hero />
         <Suspense fallback={<LoadingFallback />}>
           <About />

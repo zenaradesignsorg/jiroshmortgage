@@ -4,9 +4,10 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Analytics from "@/components/Analytics";
 import GoogleVerification from "@/components/GoogleVerification";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const App = () => (
-  <>
+  <ErrorBoundary>
     <GoogleVerification />
     <Toaster />
     <BrowserRouter>
@@ -16,7 +17,7 @@ const App = () => (
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
-  </>
+  </ErrorBoundary>
 );
 
 export default App;
