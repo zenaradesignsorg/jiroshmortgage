@@ -23,8 +23,8 @@ const Header = () => {
       >
         Skip to content
       </a>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-b border-border">
-        <div className="container flex items-center justify-between h-16 md:h-20">
+      <header className="fixed top-0 left-0 right-0 z-[60] bg-card/95 backdrop-blur-md border-b border-border">
+        <div className="container flex items-center justify-between h-16 md:h-20 relative">
         <a href="#" className="flex items-center gap-2" aria-label="Caliber Mortgage Inc - Home">
           <img 
             src={caliberLogo} 
@@ -65,7 +65,7 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="xl:hidden p-2.5 text-foreground hover:text-primary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="xl:hidden p-2.5 text-foreground hover:text-primary transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center relative z-[70]"
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
           >
@@ -77,14 +77,14 @@ const Header = () => {
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop - positioned below header */}
           <div 
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 xl:hidden"
+            className="fixed top-16 md:top-20 left-0 right-0 bottom-0 bg-background/80 backdrop-blur-sm z-[55] xl:hidden"
             onClick={() => setIsMenuOpen(false)}
             aria-hidden="true"
           />
           {/* Menu */}
-          <nav className="xl:hidden bg-card border-t border-border z-50 relative animate-fade-in">
+          <nav className="xl:hidden bg-card border-t border-border z-[55] relative animate-fade-in">
             <div className="container py-4 flex flex-col gap-2">
               {navLinks.map((link) => (
                 <a
