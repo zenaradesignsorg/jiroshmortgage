@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 import { Send, Phone, Mail, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,6 @@ const ContactForm = () => {
   const formAnim = useScrollAnimation({ type: "fade-right", delay: 200 });
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const submitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,7 +23,7 @@ const ContactForm = () => {
     message: "",
   });
 
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     const errors: string[] = [];
     
     if (!formData.name.trim()) {
@@ -44,15 +43,10 @@ const ContactForm = () => {
     }
     
     return errors;
-  };
+  }, [formData]);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Clear any pending timeout
-    if (submitTimeoutRef.current) {
-      clearTimeout(submitTimeoutRef.current);
-    }
     
     const errors = validateForm();
     if (errors.length > 0) {
@@ -88,7 +82,9 @@ const ContactForm = () => {
         throw new Error(result.error || 'Failed to send message');
       }
     } catch (error) {
-      console.error('Form submission error:', error);
+      if (import.meta.env.DEV) {
+        console.error('Form submission error:', error);
+      }
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Something went wrong. Please try again later.",
@@ -96,7 +92,7 @@ const ContactForm = () => {
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, toast]);
+  }, [formData, toast, validateForm]);
 
   const contactInfo = [
     {

@@ -131,10 +131,9 @@ const About = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {features.map((feature, index) => {
-            // Create animation hook outside of map
-            return <FeatureCard key={feature.title} feature={feature} index={index} />;
-          })}
+          {features.map((feature, index) => (
+            <FeatureCard key={feature.title} feature={feature} index={index} />
+          ))}
         </div>
       </div>
     </section>

@@ -19,7 +19,9 @@ const Analytics = () => {
 
     // Initialize analytics (lazy loaded)
     initAnalytics().catch((error) => {
-      console.warn('Failed to initialize analytics:', error);
+      if (import.meta.env.DEV) {
+        console.warn('Failed to initialize analytics:', error);
+      }
     });
   }, []);
 

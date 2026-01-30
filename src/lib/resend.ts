@@ -77,7 +77,9 @@ export const sendEmail = async (emailData: EmailData): Promise<EmailResponse> =>
         messageId: data.id,
       };
     } catch (error) {
-      console.error('Failed to send email via API:', error);
+      if (import.meta.env.DEV) {
+        console.error('Failed to send email via API:', error);
+      }
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to send email',
@@ -88,7 +90,9 @@ export const sendEmail = async (emailData: EmailData): Promise<EmailResponse> =>
   // Client-side Resend API call (for development/testing only)
   if (!RESEND_API_KEY) {
     // Mock response for development when API key is not configured
-    console.warn('Resend API key not configured. Using mock response.');
+    if (import.meta.env.DEV) {
+      console.warn('Resend API key not configured. Using mock response.');
+    }
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
@@ -144,7 +148,9 @@ Sent from jiroshmortgage.com contact form
       messageId: data.id,
     };
   } catch (error) {
-    console.error('Failed to send email via Resend:', error);
+    if (import.meta.env.DEV) {
+      console.error('Failed to send email via Resend:', error);
+    }
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to send email',

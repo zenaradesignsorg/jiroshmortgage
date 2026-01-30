@@ -79,12 +79,16 @@ const loadGAScript = (): Promise<void> => {
  */
 export const initAnalytics = async (): Promise<void> => {
   if (!GA_MEASUREMENT_ID) {
-    console.warn('Google Analytics: Measurement ID not configured');
+    if (import.meta.env.DEV) {
+      console.warn('Google Analytics: Measurement ID not configured');
+    }
     return;
   }
 
   if (!hasConsent()) {
-    console.info('Google Analytics: User has not consented');
+    if (import.meta.env.DEV) {
+      console.info('Google Analytics: User has not consented');
+    }
     return;
   }
 
@@ -95,9 +99,21 @@ export const initAnalytics = async (): Promise<void> => {
     window.addEventListener('load', () => {
       // Use requestIdleCallback for non-critical loading
       if ('requestIdleCallback' in window) {
-        requestIdleCallback(() => loadGAScript().catch(console.error));
+        requestIdleCallback(() => {
+          loadGAScript().catch((error) => {
+            if (import.meta.env.DEV) {
+              console.error('Failed to load GA script:', error);
+            }
+          });
+        });
       } else {
-        setTimeout(() => loadGAScript().catch(console.error), 1000);
+        setTimeout(() => {
+          loadGAScript().catch((error) => {
+            if (import.meta.env.DEV) {
+              console.error('Failed to load GA script:', error);
+            }
+          });
+        }, 1000);
       }
     });
   }
@@ -140,27 +156,4 @@ export const trackFormSubmission = (formName: string): void => {
     event_category: 'engagement',
     event_label: formName,
   });
-};
-
-/**
- * Track external link click
- */
-export const trackExternalLink = (url: string, linkText?: string): void => {
-  trackEvent('click', {
-    event_category: 'outbound',
-    event_label: url,
-    transport_type: 'beacon',
-    link_text: linkText,
-  });
-};
-
-/**
- * Set user consent
- */
-export const setAnalyticsConsent = (consented: boolean): void => {
-  localStorage.setItem('analytics-consent', String(consented));
-  
-  if (consented && !window.gtag) {
-    initAnalytics().catch(console.error);
-  }
 };
