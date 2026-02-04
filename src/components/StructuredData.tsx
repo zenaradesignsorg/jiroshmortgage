@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 const StructuredData = () => {
   useEffect(() => {
     // Use environment variable for production URL, fallback to default
-    const siteUrl = import.meta.env.VITE_SITE_URL || 'https://jiroshmortgage.com';
+    const siteUrl = import.meta.env.VITE_SITE_URL || 'https://jbloans.ca';
     
     // Person Schema - Jirosh Balaganesan
     const personSchema = {

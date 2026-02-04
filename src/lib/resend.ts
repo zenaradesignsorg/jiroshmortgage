@@ -2,12 +2,9 @@
  * Resend API client
  * Handles email sending via Resend API
  * 
- * Security Note: In production, this should be moved to a server-side API route
- * to avoid exposing the API key in client-side code.
+ * Security: All email sending is handled server-side via /api/contact
+ * to avoid exposing API keys in client-side code.
  */
-
-const RESEND_API_KEY = import.meta.env.VITE_RESEND_API_KEY;
-const API_URL = import.meta.env.VITE_API_URL;
 
 export interface EmailData {
   name: string;
@@ -33,13 +30,13 @@ const sanitizeInput = (input: string): string => {
 };
 
 /**
- * Send email via Resend API
+ * Send email via server-side API route
  * 
  * @param emailData - Form data to send
  * @returns Promise with response
  */
 export const sendEmail = async (emailData: EmailData): Promise<EmailResponse> => {
-  // Sanitize all inputs
+  // Sanitize all inputs on client side for better UX (server also validates)
   const sanitizedData: EmailData = {
     name: sanitizeInput(emailData.name),
     email: sanitizeInput(emailData.email),
@@ -47,7 +44,7 @@ export const sendEmail = async (emailData: EmailData): Promise<EmailResponse> =>
     message: emailData.message ? sanitizeInput(emailData.message) : undefined,
   };
 
-  // Validate email format
+  // Validate email format on client side
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(sanitizedData.email)) {
     return {
@@ -56,104 +53,36 @@ export const sendEmail = async (emailData: EmailData): Promise<EmailResponse> =>
     };
   }
 
-  // If using server-side API route
-  if (API_URL) {
-    try {
-      const response = await fetch(`${API_URL}/api/contact`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(sanitizedData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return {
-        success: true,
-        messageId: data.id,
-      };
-    } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Failed to send email via API:', error);
-      }
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Failed to send email',
-      };
-    }
-  }
-
-  // Client-side Resend API call (for development/testing only)
-  if (!RESEND_API_KEY) {
-    // Mock response for development when API key is not configured
-    if (import.meta.env.DEV) {
-      console.warn('Resend API key not configured. Using mock response.');
-    }
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          messageId: 'mock-message-id',
-        });
-      }, 1000);
-    });
-  }
-
+  // Send to server-side API route
   try {
-    const response = await fetch('https://api.resend.com/emails', {
+    const response = await fetch('/api/contact', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        from: 'Contact Form <onboarding@resend.dev>', // Update with your verified domain
-        to: ['jirosh.balaganesan@calibermortgage.ca'], // Update with recipient email
-        subject: `New Contact Form Submission from ${sanitizedData.name}`,
-        html: `
-          <h2>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${sanitizedData.name}</p>
-          <p><strong>Email:</strong> ${sanitizedData.email}</p>
-          <p><strong>Phone:</strong> ${sanitizedData.phone}</p>
-          ${sanitizedData.message ? `<p><strong>Message:</strong><br>${sanitizedData.message.replace(/\n/g, '<br>')}</p>` : ''}
-          <hr>
-          <p><small>Sent from jiroshmortgage.com contact form</small></p>
-        `,
-        text: `
-New Contact Form Submission
-
-Name: ${sanitizedData.name}
-Email: ${sanitizedData.email}
-Phone: ${sanitizedData.phone}
-${sanitizedData.message ? `Message:\n${sanitizedData.message}` : ''}
-
----
-Sent from jiroshmortgage.com contact form
-        `,
-      }),
+      body: JSON.stringify(sanitizedData),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `Resend API error: ${response.status}`);
+      return {
+        success: false,
+        error: data.error || `Server error: ${response.status}`,
+      };
     }
 
-    const data = await response.json();
     return {
       success: true,
       messageId: data.id,
     };
   } catch (error) {
     if (import.meta.env.DEV) {
-      console.error('Failed to send email via Resend:', error);
+      console.error('Failed to send email via API:', error);
     }
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to send email',
+      error: error instanceof Error ? error.message : 'Failed to send email. Please check your connection and try again.',
     };
   }
 };

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jiroshmortgage.com/sitemap.xml
+Sitemap: https://jbloans.ca/sitemap.xml

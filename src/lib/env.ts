@@ -12,9 +12,14 @@ export const isAnalyticsEnabled = (): boolean => {
 
 /**
  * Check if Resend is configured
+ * Note: Resend is now handled server-side via /api/contact
+ * This function is kept for backwards compatibility but always returns true
+ * as the API route will handle errors gracefully
  */
 export const isResendEnabled = (): boolean => {
-  return !!import.meta.env.VITE_RESEND_API_KEY;
+  // Resend is handled server-side, so we assume it's available
+  // The API route will return appropriate errors if not configured
+  return true;
 };
 
 /**

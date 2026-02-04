@@ -5,11 +5,12 @@ This checklist ensures the website is ready for production deployment.
 ## Pre-Deployment
 
 ### Environment Variables
-- [ ] Set `VITE_SITE_URL` to production domain (e.g., `https://jiroshmortgage.com`)
+- [ ] Set `VITE_SITE_URL` to production domain (e.g., `https://jbloans.ca`)
 - [ ] Set `VITE_GOOGLE_SITE_VERIFICATION` (when ready to set up Google Search Console)
 - [ ] Set `VITE_GA_MEASUREMENT_ID` (when ready to set up Google Analytics)
-- [ ] Set `VITE_RESEND_API_KEY` (when ready to set up Resend)
+- [ ] Set `RESEND_API_KEY` in Vercel (server-side only, **NOT** `VITE_RESEND_API_KEY`)
 - [ ] Verify all environment variables are set in hosting platform
+- [ ] **IMPORTANT**: Never use `VITE_` prefix for sensitive variables (API keys, secrets, etc.)
 
 ### Build Verification
 - [ ] Run `npm run build` successfully
@@ -59,7 +60,9 @@ This checklist ensures the website is ready for production deployment.
   - [ ] Referrer-Policy: strict-origin-when-cross-origin
   - [ ] Content-Security-Policy (verify it's not blocking legitimate resources)
 - [ ] Verify no sensitive data in client-side code
-- [ ] Check API keys are not exposed (use environment variables)
+- [ ] Check API keys are not exposed (use server-side environment variables only)
+- [ ] Verify `RESEND_API_KEY` is set in Vercel (not `VITE_RESEND_API_KEY`)
+- [ ] Test that `/api/contact` endpoint works correctly
 
 ## Deployment
 
@@ -146,7 +149,8 @@ This checklist ensures the website is ready for production deployment.
 
 ### Issue: Environment variables not working
 **Solution**: 
-- Ensure variables are prefixed with `VITE_`
+- Client-side variables must be prefixed with `VITE_` (only for public configuration)
+- Server-side variables (API keys, secrets) should **NOT** use `VITE_` prefix
 - Verify variables are set in hosting platform
 - Rebuild after setting variables
 
@@ -156,7 +160,7 @@ This checklist ensures the website is ready for production deployment.
 - **Canonical URLs**: Update `VITE_SITE_URL` environment variable with actual production domain.
 - **Error Tracking**: Error boundary is in place. Consider integrating Sentry or similar service for production error tracking.
 - **Analytics**: Google Analytics integration is ready but requires `VITE_GA_MEASUREMENT_ID` to be set.
-- **Resend**: Email integration is ready but requires `VITE_RESEND_API_KEY` to be set (or server-side API route).
+- **Resend**: Email integration is handled via server-side API route at `/api/contact`. Set `RESEND_API_KEY` (without `VITE_` prefix) in Vercel environment variables. The API key is never exposed to the client.
 
 ## Support Resources
 

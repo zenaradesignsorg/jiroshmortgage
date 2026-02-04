@@ -14,7 +14,7 @@ const NotFound = () => {
     // Update canonical URL
     const canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) {
-      const siteUrl = import.meta.env.VITE_SITE_URL || 'https://jiroshmortgage.com';
+      const siteUrl = import.meta.env.VITE_SITE_URL || 'https://jbloans.ca';
       canonical.setAttribute('href', `${siteUrl}/404`);
     }
 
