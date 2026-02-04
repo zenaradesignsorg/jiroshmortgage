@@ -49,6 +49,28 @@ function isValidEmail(email: string): boolean {
 }
 
 /**
+ * Map reason value to human-readable label
+ */
+function getReasonLabel(value: string): string {
+  const reasonMap: Record<string, string> = {
+    'buying-home': 'Buying a Home / First-Time Buyer',
+    'refinancing': 'Refinancing / Lower Payments',
+    'renewal': 'Mortgage Renewal',
+    'home-equity': 'Home Equity / Debt Consolidation',
+    'investment-property': 'Investment / Rental Property',
+    'special-circumstances': 'Self-Employed / Credit Challenges',
+    'commercial-purchase': 'Commercial Property Purchase',
+    'commercial-refinance': 'Commercial Refinance',
+    'multi-unit': 'Multi-Unit / Apartment Building',
+    'mixed-use': 'Mixed-Use Property',
+    'construction-financing': 'Construction / Development Financing',
+    'commercial-renewal': 'Commercial Renewal or Switch',
+    'general-question': 'General Question',
+  };
+  return reasonMap[value] || value;
+}
+
+/**
  * Get client IP address from request
  */
 function getClientIP(req: VercelRequest): string {
@@ -129,7 +151,7 @@ export default async function handler(
 
   try {
     // Validate request body
-    const { name, email, phone, message } = req.body;
+    const { name, email, phone, reason, message } = req.body;
 
     if (!name || !email || !phone) {
       return res.status(400).json({
@@ -143,6 +165,7 @@ export default async function handler(
       name: sanitizeInput(String(name)),
       email: sanitizeInput(String(email)),
       phone: sanitizeInput(String(phone)),
+      reason: reason ? sanitizeInput(String(reason)) : undefined,
       message: message ? sanitizeInput(String(message)) : undefined,
     };
 
@@ -173,15 +196,116 @@ export default async function handler(
         from: 'Contact Form <contact@jbloans.ca>',
         to: ['jirosh.balaganesan@calibermortgage.ca'],
         replyTo: sanitizedData.email,
-        subject: `New Contact Form Submission from ${sanitizedData.name}`,
+        subject: `New Contact Form Submission${sanitizedData.reason ? ` - ${getReasonLabel(sanitizedData.reason)}` : ''} from ${sanitizedData.name}`,
         html: `
-          <h2>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${sanitizedData.name}</p>
-          <p><strong>Email:</strong> ${sanitizedData.email}</p>
-          <p><strong>Phone:</strong> ${sanitizedData.phone}</p>
-          ${sanitizedData.message ? `<p><strong>Message:</strong><br>${sanitizedData.message.replace(/\n/g, '<br>')}</p>` : ''}
-          <hr>
-          <p><small>Sent from jbloans.ca contact form</small></p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f7fa; color: #1e3a5f;">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f5f7fa; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 8px 30px -6px rgba(30, 58, 95, 0.18); overflow: hidden;">
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #1e3a5f 0%, #2a4d6f 50%, #3a5d7f 100%); padding: 32px 40px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">New Contact Form Submission</h1>
+            </td>
+          </tr>
+          
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                  <td style="padding-bottom: 20px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                      <tr>
+                        <td style="padding: 12px 0; border-bottom: 1px solid #e8ecf0;">
+                          <strong style="color: #1e3a5f; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">Name</strong>
+                          <span style="color: #2a4d6f; font-size: 16px;">${sanitizedData.name}</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td style="padding-bottom: 20px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                      <tr>
+                        <td style="padding: 12px 0; border-bottom: 1px solid #e8ecf0;">
+                          <strong style="color: #1e3a5f; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">Email</strong>
+                          <a href="mailto:${sanitizedData.email}" style="color: #0073e6; font-size: 16px; text-decoration: none;">${sanitizedData.email}</a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td style="padding-bottom: 20px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                      <tr>
+                        <td style="padding: 12px 0; border-bottom: 1px solid #e8ecf0;">
+                          <strong style="color: #1e3a5f; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">Phone</strong>
+                          <a href="tel:${sanitizedData.phone.replace(/[^0-9+]/g, '')}" style="color: #2a4d6f; font-size: 16px; text-decoration: none;">${sanitizedData.phone}</a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                
+                ${sanitizedData.reason ? `
+                <tr>
+                  <td style="padding-bottom: 20px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                      <tr>
+                        <td style="padding: 12px 0; border-bottom: 1px solid #e8ecf0;">
+                          <strong style="color: #1e3a5f; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">Reason for Contacting</strong>
+                          <span style="color: #2a4d6f; font-size: 16px;">${getReasonLabel(sanitizedData.reason)}</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                ` : ''}
+                
+                ${sanitizedData.message ? `
+                <tr>
+                  <td style="padding-top: 20px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                      <tr>
+                        <td style="padding: 16px; background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid #0073e6;">
+                          <strong style="color: #1e3a5f; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 12px;">Message</strong>
+                          <p style="margin: 0; color: #2a4d6f; font-size: 15px; line-height: 1.6; white-space: pre-wrap;">${sanitizedData.message.replace(/\n/g, '\n')}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                ` : ''}
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 24px 40px; background-color: #f8f9fa; border-top: 1px solid #e8ecf0; text-align: center;">
+              <p style="margin: 0; color: #6b7280; font-size: 12px; line-height: 1.5;">
+                Sent from <a href="https://jbloans.ca" style="color: #0073e6; text-decoration: none; font-weight: 500;">jbloans.ca</a> contact form
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
         `,
         text: `
 New Contact Form Submission
@@ -189,6 +313,7 @@ New Contact Form Submission
 Name: ${sanitizedData.name}
 Email: ${sanitizedData.email}
 Phone: ${sanitizedData.phone}
+${sanitizedData.reason ? `Reason for Contacting: ${getReasonLabel(sanitizedData.reason)}` : ''}
 ${sanitizedData.message ? `Message:\n${sanitizedData.message}` : ''}
 
 ---

@@ -31,6 +31,9 @@
     --input: 207 25% 88%;
     --ring: 207 71% 21%;
 
+    --popover: 0 0% 100%;
+    --popover-foreground: 207 71% 15%;
+
     --radius: 0.75rem;
 
     /* Custom tokens */
@@ -59,6 +62,9 @@
     --border: 207 30% 22%;
     --input: 207 30% 22%;
     --ring: 207 100% 60%;
+
+    --popover: 207 71% 15%;
+    --popover-foreground: 210 40% 98%;
   }
 }
 

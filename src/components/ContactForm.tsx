@@ -4,6 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { sendEmailWithRetry } from "@/lib/resend";
@@ -16,12 +25,35 @@ const ContactForm = () => {
   const formAnim = useScrollAnimation({ type: "fade-right", delay: 200 });
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
+    reason: "",
     message: "",
   });
+
+  // Reason options organized by category
+  // Residential options consolidated to 6 most important use cases
+  const reasonOptions = {
+    residential: [
+      { value: "buying-home", label: "Buying a Home / First-Time Buyer" },
+      { value: "refinancing", label: "Refinancing / Lower Payments" },
+      { value: "renewal", label: "Mortgage Renewal" },
+      { value: "home-equity", label: "Home Equity / Debt Consolidation" },
+      { value: "investment-property", label: "Investment / Rental Property" },
+      { value: "special-circumstances", label: "Self-Employed / Credit Challenges" },
+    ],
+    commercial: [
+      { value: "commercial-purchase", label: "Commercial Property Purchase" },
+      { value: "commercial-refinance", label: "Commercial Refinance" },
+      { value: "multi-unit", label: "Multi-Unit / Apartment Building" },
+      { value: "mixed-use", label: "Mixed-Use Property" },
+      { value: "construction-financing", label: "Construction / Development Financing" },
+      { value: "commercial-renewal", label: "Commercial Renewal or Switch" },
+    ],
+  };
 
   const validateForm = useCallback(() => {
     const errors: string[] = [];
@@ -68,6 +100,7 @@ const ContactForm = () => {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
+        reason: formData.reason,
         message: formData.message,
       });
 
@@ -77,7 +110,8 @@ const ContactForm = () => {
           description: "Thanks for reaching out. I'll get back to you within 24 hours.",
         });
 
-        setFormData({ name: "", email: "", phone: "", message: "" });
+        setFormData({ name: "", email: "", phone: "", reason: "", message: "" });
+        setSelectedCategory("");
       } else {
         throw new Error(result.error || 'Failed to send message');
       }
@@ -219,6 +253,79 @@ const ContactForm = () => {
                     placeholder="(416) 123-4567"
                     className="mt-1.5 h-12 sm:h-11"
                   />
+                </div>
+
+                <div className="mb-4 space-y-3">
+                  <Label htmlFor="reason" className="text-foreground text-sm sm:text-base">
+                    Reason for Contacting Me
+                  </Label>
+                  
+                  {/* Category Selection - Always visible */}
+                  <Select
+                    value={selectedCategory || (formData.reason === "general-question" ? "general" : "")}
+                    onValueChange={(value) => {
+                      if (value === "general") {
+                        // General is a direct selection, no sub-menu
+                        setFormData({ ...formData, reason: "general-question" });
+                        setSelectedCategory("");
+                      } else {
+                        setSelectedCategory(value);
+                        // Clear the specific reason when changing category
+                        setFormData({ ...formData, reason: "" });
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="mt-1.5 h-12 sm:h-11">
+                      <SelectValue placeholder="Select a category..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="residential">Residential Mortgages</SelectItem>
+                      <SelectItem value="commercial">Commercial Mortgages</SelectItem>
+                      <SelectItem value="general">General Question</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* Sub-options for Residential - Only visible when Residential is selected */}
+                  {selectedCategory === "residential" && (
+                    <Select
+                      value={formData.reason}
+                      onValueChange={(value) => {
+                        setFormData({ ...formData, reason: value });
+                      }}
+                    >
+                      <SelectTrigger className="h-12 sm:h-11">
+                        <SelectValue placeholder="Select a specific reason..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {reasonOptions.residential.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+
+                  {/* Sub-options for Commercial - Only visible when Commercial is selected */}
+                  {selectedCategory === "commercial" && (
+                    <Select
+                      value={formData.reason}
+                      onValueChange={(value) => {
+                        setFormData({ ...formData, reason: value });
+                      }}
+                    >
+                      <SelectTrigger className="h-12 sm:h-11">
+                        <SelectValue placeholder="Select a specific reason..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {reasonOptions.commercial.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
                 </div>
 
                 <div className="mb-5 sm:mb-6">
