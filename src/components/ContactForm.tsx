@@ -96,11 +96,24 @@ const ContactForm = () => {
       trackFormSubmission('contact_form');
 
       // Send email via Resend
+      // Include category in reason if a specific reason was selected
+      let reasonToSend = formData.reason;
+      if (formData.reason && formData.reason !== "general-question") {
+        // If we have a category selected, include it in the reason
+        // Format: "category: specific-reason" so email can show both
+        if (selectedCategory && selectedCategory !== "") {
+          reasonToSend = `${selectedCategory}:${formData.reason}`;
+        }
+        // If no category but we have a reason, it means category was cleared but reason remains
+        // This shouldn't happen in normal flow, but handle it gracefully
+      }
+      // General question doesn't have a category, so just send it as-is
+      
       const result = await sendEmailWithRetry({
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
-        reason: formData.reason,
+        reason: reasonToSend,
         message: formData.message,
       });
 
@@ -291,6 +304,7 @@ const ContactForm = () => {
                       value={formData.reason}
                       onValueChange={(value) => {
                         setFormData({ ...formData, reason: value });
+                        // Keep category selected so we can include it in the email
                       }}
                     >
                       <SelectTrigger className="h-12 sm:h-11">
@@ -312,6 +326,7 @@ const ContactForm = () => {
                       value={formData.reason}
                       onValueChange={(value) => {
                         setFormData({ ...formData, reason: value });
+                        // Keep category selected so we can include it in the email
                       }}
                     >
                       <SelectTrigger className="h-12 sm:h-11">

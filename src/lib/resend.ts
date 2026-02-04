@@ -42,6 +42,7 @@ export const sendEmail = async (emailData: EmailData): Promise<EmailResponse> =>
     name: sanitizeInput(emailData.name),
     email: sanitizeInput(emailData.email),
     phone: sanitizeInput(emailData.phone),
+    reason: emailData.reason ? sanitizeInput(emailData.reason) : undefined,
     message: emailData.message ? sanitizeInput(emailData.message) : undefined,
   };
 

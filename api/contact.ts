@@ -52,6 +52,11 @@ function isValidEmail(email: string): boolean {
  * Map reason value to human-readable label
  */
 function getReasonLabel(value: string): string {
+  // Handle category:reason format (e.g., "residential:buying-home")
+  const parts = value.split(':');
+  const category = parts[0];
+  const specificReason = parts[1] || value;
+  
   const reasonMap: Record<string, string> = {
     'buying-home': 'Buying a Home / First-Time Buyer',
     'refinancing': 'Refinancing / Lower Payments',
@@ -67,7 +72,21 @@ function getReasonLabel(value: string): string {
     'commercial-renewal': 'Commercial Renewal or Switch',
     'general-question': 'General Question',
   };
-  return reasonMap[value] || value;
+  
+  const categoryLabels: Record<string, string> = {
+    'residential': 'Residential Mortgages',
+    'commercial': 'Commercial Mortgages',
+  };
+  
+  const specificLabel = reasonMap[specificReason] || specificReason;
+  
+  // If we have a category, format as "Category: Specific Reason"
+  if (categoryLabels[category] && parts.length > 1) {
+    return `${categoryLabels[category]}: ${specificLabel}`;
+  }
+  
+  // Otherwise just return the specific reason label
+  return specificLabel;
 }
 
 /**
