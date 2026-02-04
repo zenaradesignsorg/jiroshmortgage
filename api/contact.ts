@@ -161,13 +161,21 @@ export default async function handler(
     }
 
     // Sanitize inputs
+    const sanitizedReason = reason && String(reason).trim() ? sanitizeInput(String(reason).trim()) : undefined;
+    const sanitizedMessage = message && String(message).trim() ? sanitizeInput(String(message).trim()) : undefined;
+    
     const sanitizedData = {
       name: sanitizeInput(String(name)),
       email: sanitizeInput(String(email)),
       phone: sanitizeInput(String(phone)),
-      reason: reason ? sanitizeInput(String(reason)) : undefined,
-      message: message ? sanitizeInput(String(message)) : undefined,
+      reason: sanitizedReason,
+      message: sanitizedMessage,
     };
+
+    // Debug: Log reason field (remove in production if needed)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Reason field received:', reason, 'Sanitized:', sanitizedReason);
+    }
 
     // Validate email format
     if (!isValidEmail(sanitizedData.email)) {
@@ -196,7 +204,7 @@ export default async function handler(
         from: 'Contact Form <contact@jbloans.ca>',
         to: ['jirosh.balaganesan@calibermortgage.ca'],
         replyTo: sanitizedData.email,
-        subject: `New Contact Form Submission${sanitizedData.reason ? ` - ${getReasonLabel(sanitizedData.reason)}` : ''} from ${sanitizedData.name}`,
+        subject: `New Contact Form Submission${sanitizedData.reason && sanitizedData.reason.trim() ? ` - ${getReasonLabel(sanitizedData.reason)}` : ''} from ${sanitizedData.name}`,
         html: `
 <!DOCTYPE html>
 <html lang="en">
@@ -313,7 +321,7 @@ New Contact Form Submission
 Name: ${sanitizedData.name}
 Email: ${sanitizedData.email}
 Phone: ${sanitizedData.phone}
-${sanitizedData.reason ? `Reason for Contacting: ${getReasonLabel(sanitizedData.reason)}` : ''}
+${sanitizedData.reason && sanitizedData.reason.trim() ? `Reason for Contacting: ${getReasonLabel(sanitizedData.reason)}` : ''}
 ${sanitizedData.message ? `Message:\n${sanitizedData.message}` : ''}
 
 ---
